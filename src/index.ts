@@ -1,4 +1,4 @@
-import axios, { AxiosResponse, ResponseType } from 'axios';
+import axios from 'axios';
 import {
   Client as DiscordJs,
   GatewayIntentBits,
@@ -11,29 +11,6 @@ const APP_ID = process.env.DISCORD_APP_ID ?? '';
 const APP_TOKEN = process.env.DISCORD_APP_TOKEN ?? '';
 const API_KEY = process.env.FINGRID_API_KEY ?? '';
 const CHANNEL_ID = process.env.DISCORD_CHANNEL_ID ?? '';
-
-const payload = [
-  {
-    value: 0,
-    start_time: '2022-12-23T04:49:00+0000',
-    end_time: '2022-12-23T04:49:00+0000',
-  },
-  {
-    value: 1,
-    start_time: '2022-12-23T04:52:00+0000',
-    end_time: '2022-12-23T04:52:00+0000',
-  },
-  {
-    value: 2,
-    start_time: '2022-12-23T04:55:00+0000',
-    end_time: '2022-12-23T04:55:00+0000',
-  },
-  {
-    value: 2,
-    start_time: '2022-12-23T04:58:00+0000',
-    end_time: '2022-12-23T04:58:00+0000',
-  },
-];
 
 if (
   APP_ID.trim() === '' ||
@@ -50,8 +27,8 @@ let dangerLevel = 0;
 
 const messages = [
   'The situation has calmed down.',
-  'There is now a 60% risk of power outages in Finland.',
-  '@here There is now a 90% risk of power outages in Finland.',
+  'There is now a 60% risk of power outages in Finland. Save any critical work.',
+  '@here There is now a 90% risk of power outages in Finland. Unplug non-essential devices and see news outlets for more.',
 ];
 
 interface IFingridData {
@@ -96,28 +73,27 @@ const lookForUpdates = async () => {
             const newDangerLevel = Math.max(...values);
             if (newDangerLevel >= dangerLevel) {
               // The danger level has risen.
+              dangerLevel = newDangerLevel;
               const firstEvent = new Date(interesting[0].start_time);
               const lastEvent = new Date(
                 interesting[interesting.length - 1].end_time
               );
-              let startStr =
-                dangerLevel === 0 ? firstEvent.toLocaleString('fi') : '';
-              dangerLevel = newDangerLevel;
               if (channel && messages[newDangerLevel]) {
-                channel.send(messages[newDangerLevel]);
-                if (startStr) {
-                  channel.send(
-                    'Starting: ' +
-                      startStr +
-                      '. Ending: ' +
-                      lastEvent.toLocaleString('fi') +
-                      '.'
-                  );
-                }
+                await channel.send(messages[newDangerLevel]);
+                await channel.send(
+                  'Starting: ' +
+                    firstEvent.toLocaleString('fi') +
+                    '. Ending: ' +
+                    lastEvent.toLocaleString('fi') +
+                    '.'
+                );
+                await channel.send(
+                  'https://www.fingrid.fi/sahkomarkkinat/sahkojarjestelman-tila/'
+                );
               } else if (!channel) {
                 p('Invalid channel, check the id!');
               } else if (messages[newDangerLevel]) {
-                channel.send(
+                await channel.send(
                   'There is an elevated risk of power outages in Finland.'
                 );
               }
