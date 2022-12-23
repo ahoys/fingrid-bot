@@ -2,6 +2,10 @@
 
 Informs users about possible electricity delivery issues in Finland.
 
+# How it works?
+
+The bot periodically checks for electricity shortages using data from Fingrid's open API. The likelihood of a shortage is rated on a scale of 0 to 3, with 0 indicating no likelihood and 3 indicating a high likelihood. If the likelihood increases, the bot will notify the Discord channel of the risk of a blackout.
+
 ## How to use
 
 1. Pull repository & `npm i`
