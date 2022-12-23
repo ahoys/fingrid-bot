@@ -123,6 +123,16 @@ client.on('ready', () => {
   setInterval(() => {
     lookForUpdates();
   }, 1000 * 60 * 5);
+  const channel = client.channels.cache.get(CHANNEL_ID) as TextChannel;
+  if (channel) {
+    channel.send(`I'm awake.`).catch(() => {
+      p(
+        'Was unable to post a message. Do I have enough privileges for ' +
+          CHANNEL_ID +
+          '?'
+      );
+    });
+  }
 });
 
 // Start!
