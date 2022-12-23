@@ -119,12 +119,12 @@ const client = new DiscordJs({ intents: [GatewayIntentBits.Guilds] });
 // Print out a signal when we are ready to function in Discord.
 client.on('ready', () => {
   p(`Logged in as ${client.user?.tag}!`);
-  lookForUpdates();
-  setInterval(() => {
-    lookForUpdates();
-  }, 1000 * 60 * 5);
   const channel = client.channels.cache.get(CHANNEL_ID) as TextChannel;
   if (channel) {
+    lookForUpdates();
+    setInterval(() => {
+      lookForUpdates();
+    }, 1000 * 60 * 5);
     channel.send(`I'm awake.`).catch(() => {
       p(
         'Was unable to post a message. Do I have enough privileges for ' +
@@ -132,6 +132,8 @@ client.on('ready', () => {
           '?'
       );
     });
+  } else {
+    p('Discord channel not found. The bot is not functioning.');
   }
 });
 
