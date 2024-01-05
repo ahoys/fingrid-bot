@@ -20,8 +20,10 @@ The bot periodically checks for electricity shortages using data from Fingrid's 
 DISCORD_APP_ID=
 DISCORD_APP_TOKEN=
 FINGRID_API_KEY=
+DISCORD_CHANNEL_ID=
 ```
 
 - **DISCORD_APP_ID**: Discord Bot's application id.
 - **DISCORD_APP_TOKEN**: Discord Bot's token.
 - **FINGRID_API_KEY**: Fingrid API-key. Fetch for free from Fingrid.
+- **DISCORD_CHANNEL_ID**: The Discord channel id where the announcements are made to.
